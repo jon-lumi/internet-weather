@@ -1,10 +1,8 @@
+import pgPromise from 'pg-promise';
 import 'dotenv/config';
-import pg from 'pg';
 
-const { Pool } = pg;
+const pgp = pgPromise();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const db = pgp(process.env.DATABASE_URL!);
 
-export default pool;
+export default db;

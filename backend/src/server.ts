@@ -1,12 +1,11 @@
-import { type Request, type Response } from 'express';
-import app from './app.ts';
-import pool from './db.ts';
+import app from './app.js';
+import db from './db.js';
 
 const PORT = 3000;
 
 async function startServer() {
   try {
-    await pool.query('SELECT NOW()');
+    await db.one('SELECT NOW()');
 
     console.log('Connected to PostgreSQL');
 
