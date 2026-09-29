@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node src/server.ts"
+    "start": "node src/server.ts",
+    "migrate": "node-pg-migrate",
+    "seed_websites": "tsx scripts/seed_websites.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +17,9 @@
   "type": "module",
   "dependencies": {
     "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
     "express": "^5.2.1",
+    "node-pg-migrate": "^9.0.0",
     "pg": "^8.23.0"
   },
   "devDependencies": {

@@ -1,5 +1,4 @@
 import type { Website } from '../types/website.ts';
-import linkIcon from '../assets/square-arrow-out-up-right.svg'
 
 const statusColors = {
   up: 'bg-green-500',
@@ -18,7 +17,7 @@ function WebsiteStatus(website: Website) {
         />
 
         <div className='flex-col'>
-          <div className='flex gap-2'>
+          <div className='flex gap-2 items-center'>
             <header className='text-xl font-bold'>
               {website.name}
             </header>
@@ -39,7 +38,7 @@ function WebsiteStatus(website: Website) {
                 strokeWidth='2'
                 strokeLinecap='round'
                 strokeLinejoin='round'
-                className='h-6 w-6 text-(--text)'
+                className='h-5 w-5 text-(--text)'
               >
                 <path d='M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6' />
                 <path d='m21 3-9 9' />
