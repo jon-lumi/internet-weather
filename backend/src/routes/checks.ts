@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import db from "../db.ts";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-router.get('/api/services/:id/checks', async (req, res) => {
+router.get<{ id: string }>('/', async (req, res) => {
+  const serviceId = req.params.id;
   try {
     const range = req.query.range as string || '24h';
 
@@ -36,7 +37,7 @@ router.get('/api/services/:id/checks', async (req, res) => {
         AND checked_at >= NOW() - $2::interval
       ORDER BY checked_at ASC
       `,
-      [req.params.id, interval]
+      [serviceId, interval]
     );
 
     if (checks.length === 0) {

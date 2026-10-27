@@ -1,0 +1,38 @@
+
+import db from '../db.js';
+
+export async function checkWebsite(
+  service: { id: number; url: string }
+) {
+  const start = performance.now();
+
+  let responseTimeMs: number | null = null;
+  let statusCode: number | null = null;
+  let isUp = false;
+
+  try {
+    const response = await fetch(service.url, {
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    responseTimeMs = Math.round(performance.now() - start);
+    statusCode = response.status;
+
+    // For now, treat HTTP 2xx and 3xx responses as up.
+    isUp = response.status >= 200 && response.status < 400;
+  } catch (error) {
+    // Network errors and timeouts mean the site is unreachable.
+    console.error(`Check failed for ${service.url}:`, error);
+  }
+
+  try {
+    await db.none(
+      `INSERT INTO checks
+        (service_id, checked_at, response_time_ms, status_code, is_up)
+       VALUES ($1, NOW(), $2, $3, $4)`,
+      [service.id, responseTimeMs, statusCode, isUp]
+    );
+  } catch (error) {
+    console.error(`Failed to save check for ${service.url}:`, error);
+  }
+}

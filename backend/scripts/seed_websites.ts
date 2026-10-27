@@ -1,5 +1,4 @@
-import { url } from 'inspector/promises';
-import pool from '../src/db.ts';
+import db from '../src/db.ts';
 
 const websites = [
   {
@@ -16,7 +15,7 @@ const websites = [
   },
   {
     name: "YouTube",
-    url: "https://https://www.youtube.com"
+    url: "https://www.youtube.com"
   },
   {
     name: "OpenAI",
@@ -43,7 +42,7 @@ const websites = [
 async function seed() {
   try {
     for (const website of websites) {
-      await pool.query(
+      await db.query(
         `
         INSERT INTO services (name, url)
         VALUES ($1, $2)
@@ -55,8 +54,6 @@ async function seed() {
     console.log('Websites seeded successfully');
   } catch (error) {
     console.error('Failed to seed database:', error);
-  } finally {
-    await pool.end();
   }
 }
 
