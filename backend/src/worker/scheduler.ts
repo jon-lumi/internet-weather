@@ -14,6 +14,8 @@ async function runChecks() {
     services.map((service) => checkWebsite(service))
   );
 
+  await db.none("NOTIFY checks_updated");
+
   console.log('All checks completed.');
 }
 
