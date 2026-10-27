@@ -1,9 +1,9 @@
 import './App.css'
-import WebsiteStatus from './components/WebsiteStatus'
-import type { Website } from './types/website.ts';
 import { useEffect, useState } from 'react';
+import type { Website } from './types/website.ts';
+import WebsiteStatus from './components/WebsiteStatus';
+import LatencyChart from './components/LatencyChart';
 
-// query the /api/services endpoint to get the list of websites and their current status and latency
 async function fetchWebsites(): Promise<Website[]> {
   const response = await fetch('/api/services');
   if (!response.ok) {
@@ -14,6 +14,7 @@ async function fetchWebsites(): Promise<Website[]> {
   console.log('Websites:', data);
 
   return data.map((website: any) => ({
+    id: website.id,
     name: website.name,
     url: website.url,
     currentLatency: website.response_time_ms,
@@ -29,6 +30,7 @@ async function fetchWebsites(): Promise<Website[]> {
 function App() {
   const [websites, setWebsites] = useState<Website[]>([]);
   const [selectedWebsiteUrl, setSelectedWebsiteUrl] = useState<string | null>(null);
+  const [refreshVersion, setRefreshVersion] = useState(0);
 
   const selectedWebsite = websites.find(
     (website) => website.url === selectedWebsiteUrl
@@ -49,7 +51,10 @@ function App() {
     // Subscribe to server-sent events.
     const events = new EventSource('/api/events');
 
-    events.addEventListener('checks-updated', loadWebsites);
+    events.addEventListener('checks-updated', () => {
+      loadWebsites();
+      setRefreshVersion((version) => version + 1);
+    });
 
     events.onerror = (error) => {
       console.error('SSE connection error:', error);
@@ -82,13 +87,18 @@ function App() {
           ))}
         </aside>
 
-{selectedWebsite && (
-  <section className="border-l-2 border-(--border) p-10">
-    <header className="text-2xl font-bold">
-      {selectedWebsite.name} Stats:
-    </header>
-  </section>
-)}
+        {selectedWebsite && (
+          <section className="border-l-2 border-(--border) p-10">
+            {/* <header className="text-2xl font-bold">
+              {selectedWebsite.name} Stats:
+            </header> */}
+
+            <LatencyChart
+              serviceId={selectedWebsite.id}
+              refreshVersion={refreshVersion}
+            />
+          </section>
+        )}
       </main>
     </>
   )
