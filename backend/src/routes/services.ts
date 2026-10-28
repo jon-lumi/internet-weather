@@ -13,7 +13,7 @@ router.get('/', async (_req, res) => {
         c.checked_at,
         c.response_time_ms,
         c.status_code,
-        c.is_up
+        c.status
       FROM services s
       LEFT JOIN (
         SELECT DISTINCT ON (service_id)
@@ -21,7 +21,7 @@ router.get('/', async (_req, res) => {
           checked_at,
           response_time_ms,
           status_code,
-          is_up
+          status
         FROM checks
         ORDER BY service_id, checked_at DESC
       ) c

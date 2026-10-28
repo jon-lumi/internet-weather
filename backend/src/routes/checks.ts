@@ -31,7 +31,7 @@ router.get<{ id: string }>('/', async (req, res) => {
         checked_at,
         response_time_ms,
         status_code,
-        is_up
+        status
       FROM checks
       WHERE service_id = $1
         AND checked_at >= NOW() - $2::interval

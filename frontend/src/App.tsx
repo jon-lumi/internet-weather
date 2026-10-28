@@ -2,7 +2,7 @@ import './App.css'
 import { useEffect, useState } from 'react';
 import type { Website } from './types/website.ts';
 import WebsiteStatus from './components/WebsiteStatus';
-import LatencyChart from './components/LatencyChart';
+import LatencyChart from './components/LatencyGraph.tsx';
 
 async function fetchWebsites(): Promise<Website[]> {
   const response = await fetch('/api/services');
@@ -18,11 +18,7 @@ async function fetchWebsites(): Promise<Website[]> {
     name: website.name,
     url: website.url,
     currentLatency: website.response_time_ms,
-    currentStatus: !website.is_up
-      ? 'down'
-      : website.response_time_ms > 500
-        ? 'degraded'
-        : 'up',
+    currentStatus: website.status,
     isSelected: false,
   }));
 }
@@ -94,6 +90,7 @@ function App() {
             </header> */}
 
             <LatencyChart
+              key={selectedWebsite.id} // Add a key to force re-render when the selected website changes
               serviceId={selectedWebsite.id}
               refreshVersion={refreshVersion}
             />

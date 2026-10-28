@@ -8,7 +8,7 @@ export async function checkWebsite(
 
   let responseTimeMs: number | null = null;
   let statusCode: number | null = null;
-  let isUp = false;
+  let status = "down";
 
   try {
     const response = await fetch(service.url, {
@@ -19,7 +19,10 @@ export async function checkWebsite(
     statusCode = response.status;
 
     // For now, treat HTTP 2xx and 3xx responses as up.
-    isUp = response.status >= 200 && response.status < 400;
+    status = response.status >= 200 && response.status < 400 ? "up" : "down";
+    if (status === "up" && responseTimeMs > 500) {
+      status = "degraded";
+    }
   } catch (error) {
     // Network errors and timeouts mean the site is unreachable.
     console.error(`Check failed for ${service.url}:`, error);
@@ -28,9 +31,9 @@ export async function checkWebsite(
   try {
     await db.none(
       `INSERT INTO checks
-        (service_id, checked_at, response_time_ms, status_code, is_up)
+        (service_id, checked_at, response_time_ms, status_code, status)
        VALUES ($1, NOW(), $2, $3, $4)`,
-      [service.id, responseTimeMs, statusCode, isUp]
+      [service.id, responseTimeMs, statusCode, status]
     );
   } catch (error) {
     console.error(`Failed to save check for ${service.url}:`, error);
