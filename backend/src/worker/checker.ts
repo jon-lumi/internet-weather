@@ -1,41 +1,48 @@
+type Service = {
+  id: number;
+  url: string;
+};
 
-import db from '../db.js';
+export type CheckResult = {
+  serviceId: number;
+  responseTimeMs: number | null;
+  statusCode: number | null;
+  status: 'up' | 'degraded' | 'down';
+};
 
 export async function checkWebsite(
-  service: { id: number; url: string }
-) {
+  service: Service
+): Promise<CheckResult> {
   const start = performance.now();
 
   let responseTimeMs: number | null = null;
   let statusCode: number | null = null;
-  let status = "down";
+  let status: CheckResult['status'] = 'down';
 
   try {
     const response = await fetch(service.url, {
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(5_000),
     });
 
     responseTimeMs = Math.round(performance.now() - start);
     statusCode = response.status;
 
-    // For now, treat HTTP 2xx and 3xx responses as up.
-    status = response.status >= 200 && response.status < 400 ? "up" : "down";
-    if (status === "up" && responseTimeMs > 500) {
-      status = "degraded";
-    }
+    status =
+      response.status >= 200 && response.status < 400
+        ? responseTimeMs > 500
+          ? 'degraded'
+          : 'up'
+        : 'down';
+
+    await response.body?.cancel();
   } catch (error) {
-    // Network errors and timeouts mean the site is unreachable.
     console.error(`Check failed for ${service.url}:`, error);
   }
 
-  try {
-    await db.none(
-      `INSERT INTO checks
-        (service_id, checked_at, response_time_ms, status_code, status)
-       VALUES ($1, NOW(), $2, $3, $4)`,
-      [service.id, responseTimeMs, statusCode, status]
-    );
-  } catch (error) {
-    console.error(`Failed to save check for ${service.url}:`, error);
-  }
+  return {
+    serviceId: service.id,
+    responseTimeMs,
+    statusCode,
+    status,
+  };
 }

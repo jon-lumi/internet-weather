@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "node src/server.ts",
     "migrate": "node-pg-migrate",
-    "seed_websites": "tsx scripts/seed_websites.ts",
+    "seed_websites": "tsx scripts/seedWebsites.ts",
     "worker": "tsx src/worker/scheduler.ts"
   },
   "keywords": [],
