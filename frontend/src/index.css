@@ -10,14 +10,14 @@
   --code-bg: #0d131d;
 
   --accent: #3b82f6;
-  --accent-bg: rgba(59, 130, 246, 0.10);
-  --accent-border: rgba(59, 130, 246, 0.40);
+  --accent-bg: #3B82F61A;
+  --accent-border: #3B82F666;
 
-  --social-bg: rgba(13, 19, 29, 0.7);
+  --social-bg: #0D131DB3;
 
   --shadow:
-    rgba(0, 0, 0, 0.55) 0 10px 25px -5px,
-    rgba(0, 0, 0, 0.30) 0 4px 10px -2px;
+    #0000008C 0 10px 25px -5px,
+    #0000004D 0 4px 10px -2px;
 
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;

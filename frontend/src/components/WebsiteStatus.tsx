@@ -69,10 +69,3 @@ function WebsiteStatus(website: Website) {
 }
 
 export default WebsiteStatus;
-
-//   <span
-//   className='w-0 h-0
-//                border-t-15 border-t-transparent
-//                border-b-15 border-b-transparent
-//                border-r-20 border-r-(--accent)'
-//   />
