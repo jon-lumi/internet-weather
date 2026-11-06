@@ -1,5 +1,5 @@
-import db from '.././db.js';
-import { updates } from '.././events.js';
+import db from './db.ts';
+import { updates } from './events.ts';
 
 export async function startWorkerListener() {
   const connection = await db.connect();

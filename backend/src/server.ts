@@ -1,6 +1,6 @@
 import app from './app.js';
 import db from './db.js';
-import { startWorkerListener } from './worker/listener.ts';
+import { startWorkerListener } from './listener.ts';
 
 const PORT = 3000;
 

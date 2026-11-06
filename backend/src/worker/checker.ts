@@ -28,7 +28,7 @@ export async function checkWebsite(
     statusCode = response.status;
 
     status =
-      response.status >= 200 && response.status < 400
+      response.status >= 200 && response.status < 500
         ? responseTimeMs > 500
           ? 'degraded'
           : 'up'
