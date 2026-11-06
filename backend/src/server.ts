@@ -2,7 +2,7 @@ import app from './app.js';
 import db from './db.js';
 import { startWorkerListener } from './listener.ts';
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
@@ -12,10 +12,10 @@ async function startServer() {
     await startWorkerListener();
 
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to connect to PostgreSQL:', error);
+    console.error('Failed to start server:', error);
     process.exit(1);
   }
 }

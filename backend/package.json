@@ -8,7 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node src/server.ts",
-    "migrate": "node-pg-migrate",
+    "migrate": "node-pg-migrate -m migrations",
     "seed_websites": "tsx scripts/seedWebsites.ts",
     "worker": "tsx src/worker/scheduler.ts"
   },
@@ -26,6 +26,7 @@
     "pg-promise": "^12.7.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",

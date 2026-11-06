@@ -1,10 +1,15 @@
 import express, { type Express } from 'express';
+import cors from 'cors';
 import servicesRouter from './routes/services.js';
 import checksRouter from './routes/checks.ts';
 import eventsRouter from './routes/events.ts';
 import statsRouter from './routes/stats.ts';
 
 const app: Express = express();
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+}));
 app.use(express.json());
 
 app.use('/api', eventsRouter);
